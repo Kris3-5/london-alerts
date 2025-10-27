@@ -4,12 +4,8 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 let shapes = [];
+function random(min, max) { return Math.random() * (max - min) + min; }
 
-function random(min, max) {
-  return Math.random() * (max - min) + min;
-}
-
-// Create shapes
 for (let i = 0; i < 50; i++) {
   shapes.push({
     x: random(0, canvas.width),
@@ -24,37 +20,33 @@ for (let i = 0; i < 50; i++) {
 }
 
 function draw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(0,0,canvas.width,canvas.height);
   shapes.forEach(shape => {
     ctx.save();
     ctx.translate(shape.x, shape.y);
-    ctx.rotate(shape.angle * Math.PI / 180);
+    ctx.rotate(shape.angle * Math.PI/180);
     ctx.fillStyle = shape.color;
     ctx.beginPath();
-    ctx.moveTo(0, -shape.size / 2);
-    for (let i = 0; i < 5; i++) {
+    ctx.moveTo(0,-shape.size/2);
+    for (let i=0;i<5;i++){
       ctx.lineTo(shape.size/2 * Math.cos((i*144)*Math.PI/180), shape.size/2 * Math.sin((i*144)*Math.PI/180));
     }
     ctx.closePath();
     ctx.fill();
     ctx.restore();
-
     shape.x += shape.dx;
     shape.y += shape.dy;
     shape.angle += shape.dAngle;
-
-    if (shape.x < -100) shape.x = canvas.width + 100;
-    if (shape.x > canvas.width + 100) shape.x = -100;
-    if (shape.y < -100) shape.y = canvas.height + 100;
-    if (shape.y > canvas.height + 100) shape.y = -100;
+    if (shape.x<-100) shape.x=canvas.width+100;
+    if (shape.x>canvas.width+100) shape.x=-100;
+    if (shape.y<-100) shape.y=canvas.height+100;
+    if (shape.y>canvas.height+100) shape.y=-100;
   });
   requestAnimationFrame(draw);
 }
-
 draw();
 
-// Update canvas size on resize
-window.addEventListener('resize', () => {
+window.addEventListener('resize',()=>{
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 });
