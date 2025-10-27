@@ -3,7 +3,7 @@ name: Update Alerts Data
 on:
   schedule:
     - cron: '*/30 * * * *' # every 30 minutes
-  workflow_dispatch: # manual trigger
+  workflow_dispatch:
 
 jobs:
   fetch-alerts:
@@ -18,12 +18,10 @@ jobs:
           python-version: '3.x'
 
       - name: Install Dependencies
-        run: |
-          pip install feedparser
+        run: pip install feedparser
 
       - name: Fetch Alerts
-        run: |
-          python scripts/fetch_alerts.py
+        run: python scripts/fetch_alerts.py
 
       - name: Commit and Push JSON
         run: |
