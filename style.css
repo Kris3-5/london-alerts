@@ -4,64 +4,80 @@ body, html {
   height: 100%;
   background-color: #0d0d0d;
   color: white;
-  font-family: "Inter", sans-serif;
+  font-family: sans-serif;
   overflow-x: hidden;
 }
 
-/* Geometric background canvas */
+/* Canvas */
 canvas#bg-canvas {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: -1;
-  width: 100%;
-  height: 100%;
-}
-
-/* Category Gradients */
-#police-section { background: linear-gradient(135deg, #1E3A8A, #3B82F6); }
-#fire-section { background: linear-gradient(135deg, #C2410C, #F97316); }
-#nhs-section { background: linear-gradient(135deg, #1D4ED8, #3B82F6); }
-#weather-section { background: linear-gradient(135deg, #B45309, #FACC15); }
-
-.alert-section {
-  padding: 1rem;
-  border-radius: 0.75rem;
-  margin-bottom: 1rem;
-  color: white;
-}
-/* Canvas must fill the viewport */
-canvas#bg-canvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 0;           /* behind content, content should be z-index:1 */
+  z-index: 0;
   width: 100vw;
   height: 100vh;
   display: block;
-  background: #000;     /* black background */
+  background: #000;
 }
 
-/* Content should be above canvas */
 header, main {
   position: relative;
   z-index: 1;
 }
 
+/* Alert sections */
+.alert-section {
+  padding: 1rem;
+  border-radius: 0.75rem;
+  color: white;
+}
+
+/* Category backgrounds */
+#police-section { background: linear-gradient(135deg, #1E3A8A, #3B82F6); }
+#fire-section { background: linear-gradient(135deg, #C2410C, #F97316); }
+#nhs-section { background: linear-gradient(135deg, #1D4ED8, #3B82F6); }
+#weather-section { background: linear-gradient(135deg, #B45309, #FACC15); }
 
 .alert-card {
-  background-color: rgba(0, 0, 0, 0.45);
+  background-color: rgba(0,0,0,0.45);
   padding: 0.75rem;
   margin-bottom: 0.5rem;
   border-radius: 0.5rem;
   transition: transform 0.2s, box-shadow 0.2s;
   cursor: pointer;
 }
-
 .alert-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 10px rgba(255,255,255,0.3);
 }
+
+/* Filter buttons */
+.filter-btn {
+  padding: 0.5rem 1.2rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  color: white;
+  margin: 0.25rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.filter-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 10px rgba(255,255,255,0.5);
+}
+.filter-btn[data-target="police"] { background-color: #1E3A8A; }
+.filter-btn[data-target="fire"] { background-color: #C2410C; }
+.filter-btn[data-target="nhs"] { background-color: #1D4ED8; }
+.filter-btn[data-target="weather"] { background-color: #B45309; }
+.filter-btn[data-target="all"] { background-color: #4B5563; }
+
+.alert-description {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  color: #e0e0e0;
+  margin-top: 0.25rem;
+}
+.alert-description.open { max-height: 500px; }
 
 .dot {
   width: 12px;
@@ -70,40 +86,4 @@ header, main {
   display: inline-block;
   margin-right: 10px;
   box-shadow: 0 0 4px currentColor;
-}
-
-/* Button styling */
-.filter-btn {
-  padding: 0.5rem 1.2rem;
-  border-radius: 9999px;
-  font-weight: 600;
-  color: white;
-  margin: 0.25rem;
-  transition: transform 0.2s, box-shadow 0.2s;
-  cursor: pointer;
-}
-
-.filter-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 0 10px rgba(255,255,255,0.5);
-}
-
-/* Button Colors */
-.filter-btn[data-target="police"] { background-color: #1E3A8A; }
-.filter-btn[data-target="fire"] { background-color: #C2410C; }
-.filter-btn[data-target="nhs"] { background-color: #1D4ED8; }
-.filter-btn[data-target="weather"] { background-color: #B45309; }
-.filter-btn[data-target="all"] { background-color: #4B5563; }
-
-/* Collapsible alert description */
-.alert-description {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease;
-  color: #e0e0e0;
-  margin-top: 0.25rem;
-}
-
-.alert-description.open {
-  max-height: 500px;
 }
