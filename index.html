@@ -6,19 +6,34 @@
   <title>London Alerts Monitor</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <style>
-    body {
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
       background-color: #121212;
       color: white;
-      background-image: url('https://www.transparenttextures.com/patterns/geometry2.png'); /* subtle geometric pattern */
-      background-size: cover;
+      overflow-x: hidden;
+      font-family: sans-serif;
     }
+
+    canvas#bg-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      width: 100%;
+      height: 100%;
+    }
+
     .alert-section {
       background-color: #1E1E1E;
     }
+
     .alert-card:hover {
       background-color: #2A2A2A;
       transition: background-color 0.2s;
     }
+
     .dot {
       width: 10px;
       height: 10px;
@@ -28,15 +43,17 @@
     }
   </style>
 </head>
-<body class="font-sans">
+<body>
 
-<header class="p-6 text-center">
+<canvas id="bg-canvas"></canvas>
+
+<header class="p-6 text-center relative z-10">
   <h1 class="text-4xl font-bold mb-2">London Alerts Monitor</h1>
   <p class="text-gray-300">Police | Fire | NHS | Weather</p>
   <p id="last-updated" class="text-gray-400 mt-1"></p>
 </header>
 
-<main class="p-6">
+<main class="p-6 relative z-10">
   <!-- Filter Tabs -->
   <div class="flex justify-center mb-6 space-x-4 flex-wrap">
     <button class="filter-btn px-4 py-2 bg-blue-600 text-white rounded" data-target="police">Police</button>
@@ -67,5 +84,7 @@
 </main>
 
 <script src="script.js"></script>
+<script src="background.js"></script>
+
 </body>
 </html>
