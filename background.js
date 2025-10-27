@@ -21,7 +21,7 @@ for (let i = 0; i < numPoints; i++) {
 }
 
 function draw() {
-  ctx.fillStyle = '#000';
+  ctx.fillStyle = '#0d0d0d';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   for (let i = 0; i < points.length; i++) {
@@ -31,7 +31,6 @@ function draw() {
       const dist = Math.sqrt(dx*dx + dy*dy);
       if (dist < 150) {
         ctx.strokeStyle = `rgba(255,255,255,${1 - dist / 150})`;
-        ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.moveTo(points[i].x, points[i].y);
         ctx.lineTo(points[j].x, points[j].y);
