@@ -1,25 +1,26 @@
-// Fetch data and render alerts
+// =====================
+// Fetch and Render Alerts
+// =====================
 async function fetchData(url, containerId, collapsible = false) {
   try {
     const res = await fetch(url);
     if (!res.ok) throw new Error(`Failed to fetch ${url}`);
     const data = await res.json();
     const container = document.getElementById(containerId);
-    container.innerHTML = ''; // clear previous content
+    container.innerHTML = ''; // Clear previous content
 
     data.alerts.forEach(alert => {
-      // Dot color based on category logic
+      // Determine dot color based on alert title
       let dotColor = 'green';
-      if (alert.title.toLowerCase().includes('warning')) dotColor = 'yellow';
-      if (alert.title.toLowerCase().includes('alert') || alert.title.toLowerCase().includes('emergency')) dotColor = 'red';
+      const titleLower = alert.title.toLowerCase();
+      if (titleLower.includes('warning')) dotColor = 'yellow';
+      if (titleLower.includes('alert') || titleLower.includes('emergency')) dotColor = 'red';
 
-      // Card container
+      // Create alert card
       const card = document.createElement('div');
-      card.className = 'alert-card p-4 rounded mb-2 shadow-md cursor-pointer';
-      card.style.position = 'relative';
-      card.style.backgroundColor = '#111'; // default dark card background
+      card.className = 'alert-card';
 
-      // Colored dot
+      // Dot element
       const dot = document.createElement('span');
       dot.style.width = '12px';
       dot.style.height = '12px';
@@ -28,7 +29,7 @@ async function fetchData(url, containerId, collapsible = false) {
       dot.style.marginRight = '8px';
       dot.style.backgroundColor = dotColor;
 
-      // Title
+      // Title element
       const title = document.createElement('strong');
       title.innerText = alert.title;
 
@@ -49,6 +50,7 @@ async function fetchData(url, containerId, collapsible = false) {
         desc.style.fontSize = '0.9rem';
         card.appendChild(desc);
 
+        // Toggle on click
         card.addEventListener('click', () => {
           desc.style.display = desc.style.display === 'none' ? 'block' : 'none';
         });
@@ -58,10 +60,14 @@ async function fetchData(url, containerId, collapsible = false) {
     });
   } catch (err) {
     console.error(err);
+    const container = document.getElementById(containerId);
+    container.innerHTML = `<div class="alert-card" style="background-color:#333;">Error loading alerts.</div>`;
   }
 }
 
-// Map category IDs to JSON paths
+// =====================
+// Categories
+// =====================
 const categories = [
   {id: 'police-list', url: './data/police.json', collapsible: true},
   {id: 'fire-list', url: './data/fire.json', collapsible: true},
@@ -69,10 +75,14 @@ const categories = [
   {id: 'weather-list', url: './data/weather.json', collapsible: true}
 ];
 
-// Initial fetch
+// =====================
+// Initial Fetch
+// =====================
 categories.forEach(cat => fetchData(cat.url, cat.id, cat.collapsible));
 
-// Auto-update every 30 minutes (1800000 ms)
+// =====================
+// Auto-Update Every 30 Minutes
+// =====================
 setInterval(() => {
   categories.forEach(cat => fetchData(cat.url, cat.id, cat.collapsible));
-}, 1800000);
+}, 30 * 60 * 1000); // 30 minutes
