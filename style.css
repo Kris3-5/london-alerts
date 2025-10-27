@@ -30,6 +30,24 @@ canvas#bg-canvas {
   margin-bottom: 1rem;
   color: white;
 }
+/* Canvas must fill the viewport */
+canvas#bg-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 0;           /* behind content, content should be z-index:1 */
+  width: 100vw;
+  height: 100vh;
+  display: block;
+  background: #000;     /* black background */
+}
+
+/* Content should be above canvas */
+header, main {
+  position: relative;
+  z-index: 1;
+}
+
 
 .alert-card {
   background-color: rgba(0, 0, 0, 0.45);
