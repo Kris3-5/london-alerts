@@ -4,31 +4,35 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>London Alerts Monitor</title>
-  <link rel="stylesheet" href="style.css">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
-  <header>
-    <h1>London Alerts Monitor</h1>
+<body class="bg-gray-100 font-sans">
+
+  <header class="bg-blue-700 text-white p-4 text-center">
+    <h1 class="text-3xl font-bold">London Alerts Monitor</h1>
+    <p class="mt-1">Police | Fire | NHS | Weather</p>
+    <p id="last-updated" class="text-sm mt-1"></p>
   </header>
-  <main>
-    <section id="police">
-      <h2>Police Alerts</h2>
+
+  <main class="p-4 grid gap-6 md:grid-cols-2">
+    <section class="bg-white rounded-lg shadow p-4">
+      <h2 class="text-xl font-semibold mb-2">Police Alerts</h2>
       <ul id="police-list"></ul>
     </section>
-    <section id="fire">
-      <h2>Fire Alerts</h2>
+    <section class="bg-white rounded-lg shadow p-4">
+      <h2 class="text-xl font-semibold mb-2">Fire Alerts</h2>
       <ul id="fire-list"></ul>
     </section>
-    <section id="nhs">
-      <h2>NHS & Health Alerts</h2>
+    <section class="bg-white rounded-lg shadow p-4">
+      <h2 class="text-xl font-semibold mb-2">NHS & Health</h2>
       <ul id="nhs-list"></ul>
     </section>
-    <section id="weather">
-      <h2>Weather Alerts</h2>
+    <section class="bg-white rounded-lg shadow p-4">
+      <h2 class="text-xl font-semibold mb-2">Weather Alerts</h2>
       <ul id="weather-list"></ul>
     </section>
   </main>
+
   <script src="script.js"></script>
 </body>
 </html>
-
