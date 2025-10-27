@@ -33,7 +33,6 @@ def fetch_feed(url):
             })
         return items
     except Exception as e:
-        print(f"Error fetching {url}: {e}")
         return [{
             "title": "Error fetching alerts",
             "description": str(e),
@@ -48,5 +47,3 @@ for category, url in feeds.items():
     }
     with open(f"data/{category}.json", "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
-
-print("✅ Alerts JSON updated successfully.")
