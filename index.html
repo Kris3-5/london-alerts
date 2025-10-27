@@ -2,36 +2,56 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>London Alerts Monitor</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>London Alerts Monitor</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <canvas id="bg-canvas"></canvas>
+<canvas id="bg-canvas"></canvas>
 
-  <header>London Alerts Monitor</header>
+<header class="p-6 text-center relative z-10">
+  <h1 class="text-4xl font-bold mb-2">London Alerts Monitor</h1>
+  <p class="text-gray-300">Police | Fire | NHS | Weather</p>
+  <p id="last-updated" class="text-gray-400 mt-1"></p>
+</header>
 
-  <main>
-    <div class="category-section">
-      <h2>Police</h2>
-      <div id="police-list"></div>
-    </div>
-    <div class="category-section">
-      <h2>Fire</h2>
-      <div id="fire-list"></div>
-    </div>
-    <div class="category-section">
-      <h2>NHS</h2>
-      <div id="nhs-list"></div>
-    </div>
-    <div class="category-section">
-      <h2>Weather</h2>
-      <div id="weather-list"></div>
-    </div>
-  </main>
+<main class="p-6 relative z-10">
+  <!-- Filter Buttons -->
+  <div class="flex justify-center mb-6 flex-wrap">
+    <button class="filter-btn" data-target="police">Police</button>
+    <button class="filter-btn" data-target="fire">Fire</button>
+    <button class="filter-btn" data-target="nhs">NHS</button>
+    <button class="filter-btn" data-target="weather">Weather</button>
+    <button class="filter-btn" data-target="all">All</button>
+  </div>
 
-  <script src="background.js"></script>
-  <script src="script.js"></script>
+  <div class="grid gap-6 md:grid-cols-2">
+    <section class="alert-section" id="police-section">
+      <h2 class="text-xl font-semibold mb-2">Police Alerts</h2>
+      <ul id="police-list"></ul>
+    </section>
+
+    <section class="alert-section" id="fire-section">
+      <h2 class="text-xl font-semibold mb-2">Fire Alerts</h2>
+      <ul id="fire-list"></ul>
+    </section>
+
+    <section class="alert-section" id="nhs-section">
+      <h2 class="text-xl font-semibold mb-2">NHS & Health</h2>
+      <ul id="nhs-list"></ul>
+    </section>
+
+    <section class="alert-section" id="weather-section">
+      <h2 class="text-xl font-semibold mb-2">Weather Alerts</h2>
+      <ul id="weather-list"></ul>
+    </section>
+  </div>
+</main>
+
+<script src="background.js"></script>
+<script src="script.js"></script>
+<script src="filters.js"></script>
 </body>
 </html>
