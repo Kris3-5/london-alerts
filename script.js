@@ -29,13 +29,12 @@ async function fetchData(file, elementId, showDescription=false){
     const data = await response.json();
     const list = document.getElementById(elementId);
     list.innerHTML="";
-    const alerts = data.alerts || data; // support timestamp JSON
+    const alerts = data.alerts || data;
     alerts.forEach(item=>{
       const severity = getAlertSeverity(item.title);
       const dotColor = getDotColor(severity);
       const li = document.createElement("li");
       li.className="alert-card";
-      li.style.backgroundColor = categoryColors[elementId.replace('-list','')];
 
       const titleDiv=document.createElement("div");
       titleDiv.className="flex items-center";
@@ -44,13 +43,13 @@ async function fetchData(file, elementId, showDescription=false){
 
       if(showDescription && item.description){
         const descDiv=document.createElement("div");
-        descDiv.className="text-gray-300 text-sm mt-1 hidden";
+        descDiv.className="alert-description";
         descDiv.innerHTML=`${item.description} <br><em>${item.date}</em>`;
         li.appendChild(descDiv);
-        li.addEventListener("click",()=>descDiv.classList.toggle("hidden"));
+        li.addEventListener("click",()=>descDiv.classList.toggle("open"));
       }else{
         const dateDiv=document.createElement("div");
-        dateDiv.className="text-gray-400 text-sm mt-1";
+        dateDiv.className="text-gray-300 text-sm mt-1";
         dateDiv.textContent=item.date;
         li.appendChild(dateDiv);
       }
@@ -71,9 +70,9 @@ async function updateAlerts(){
 }
 
 updateAlerts();
-setInterval(updateAlerts,30*60*1000); // refresh every 30 minutes
+setInterval(updateAlerts,30*60*1000); // 30-min refresh
 
-// Filter Tabs
+// Filter Buttons
 const tabs=document.querySelectorAll(".filter-btn");
 tabs.forEach(tab=>{
   tab.addEventListener("click",()=>{
