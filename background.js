@@ -1,38 +1,61 @@
-const canvas = document.getElementById("bg-canvas");
-const ctx = canvas.getContext("2d");
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+// Animated geometric background
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
 
-function random(min, max) {
-  return Math.random() * (max - min) + min;
+function resize() {
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = Math.floor(window.innerWidth * dpr);
+  canvas.height = Math.floor(window.innerHeight * dpr);
+  canvas.style.width = window.innerWidth + 'px';
+  canvas.style.height = window.innerHeight + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 }
+window.addEventListener('resize', resize);
+resize();
 
-const lines = Array.from({ length: 40 }, () => ({
-  x: random(0, canvas.width),
-  y: random(0, canvas.height),
-  dx: random(-0.5, 0.5),
-  dy: random(-0.5, 0.5),
+const POINTS = 90;
+const points = Array.from({ length: POINTS }, () => ({
+  x: Math.random() * canvas.width,
+  y: Math.random() * canvas.height,
+  vx: (Math.random() - 0.5) * 0.25,
+  vy: (Math.random() - 0.5) * 0.25
 }));
 
-function animate() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.strokeStyle = "rgba(255,255,255,0.1)";
-  lines.forEach((l) => {
+function draw() {
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  for (let i = 0; i < POINTS; i++) {
+    const p = points[i];
+    for (let j = i + 1; j < POINTS; j++) {
+      const q = points[j];
+      const dx = p.x - q.x;
+      const dy = p.y - q.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 160) {
+        const alpha = 0.18 * (1 - dist / 160);
+        ctx.strokeStyle = `rgba(255,255,255,${alpha})`;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+        ctx.lineTo(q.x, q.y);
+        ctx.stroke();
+      }
+    }
+  }
+
+  for (const p of points) {
+    ctx.fillStyle = 'rgba(255,255,255,0.06)';
     ctx.beginPath();
-    ctx.moveTo(l.x, l.y);
-    ctx.lineTo(l.x + 10, l.y + 10);
-    ctx.stroke();
-    l.x += l.dx;
-    l.y += l.dy;
-    if (l.x < 0 || l.x > canvas.width) l.dx *= -1;
-    if (l.y < 0 || l.y > canvas.height) l.dy *= -1;
-  });
-  requestAnimationFrame(animate);
+    ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+    ctx.fill();
+    p.x += p.vx; p.y += p.vy;
+    if (p.x < -50) p.x = canvas.width + 50;
+    if (p.x > canvas.width + 50) p.x = -50;
+    if (p.y < -50) p.y = canvas.height + 50;
+    if (p.y > canvas.height + 50) p.y = -50;
+  }
+
+  requestAnimationFrame(draw);
 }
-
-animate();
-
-window.addEventListener("resize", () => {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-});
+draw();
