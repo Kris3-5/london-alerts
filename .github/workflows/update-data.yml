@@ -6,12 +6,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  fetch-alerts:
+  update:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
@@ -22,7 +22,20 @@ jobs:
       - name: Fetch Alerts
         run: python scripts/fetch_alerts.py
 
-      - name: Commit and Push JSON
+      - name: Validate JSON
+        run: |
+          python - <<'PY'
+          import json, glob, sys
+          for f in glob.glob("data/*.json"):
+              try:
+                  json.load(open(f))
+                  print(f, "OK")
+              except Exception as e:
+                  print(f, "Invalid JSON:", e)
+                  sys.exit(1)
+          PY
+
+      - name: Commit & Push
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
