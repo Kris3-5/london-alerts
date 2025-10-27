@@ -32,7 +32,7 @@ function renderAlerts(type, data){
         <strong>${title}</strong>
         ${timestamp ? `<span class="text-gray-300 text-sm ml-2">(${formatDate(timestamp)})</span>` : ''}
       </div>
-      <div class="alert-description collapsed">${description}</div>
+      <div class="alert-description">${description}</div>
       <button class="read-more-btn">Read More</button>
     `;
 
@@ -40,14 +40,11 @@ function renderAlerts(type, data){
     const btn = li.querySelector('.read-more-btn');
 
     // Toggle Read More / Less
-    btn.addEventListener('click', ()=>{
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
       descDiv.classList.toggle('open');
-      if(descDiv.classList.contains('open')){
-        btn.textContent='Read Less';
-      } else {
-        btn.textContent='Read More';
-      }
-    });
+      btn.textContent = descDiv.classList.contains('open') ? 'Read Less' : 'Read More';
+     });
 
     list.appendChild(li);
   });
