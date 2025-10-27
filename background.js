@@ -59,3 +59,7 @@ function draw() {
   requestAnimationFrame(draw);
 }
 draw();
+
+console.log("background.js loaded");
+const canvas = document.getElementById("bg-canvas");
+console.log("Canvas element:", canvas);
