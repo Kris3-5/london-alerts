@@ -66,18 +66,6 @@ header, main {
 .filter-btn[data-target="weather"] { background-color: #B45309; }
 .filter-btn[data-target="all"] { background-color: #4B5563; }
 
-.alert-description {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease;
-  color: #e0e0e0;
-  margin-top: 0.25rem;
-}
-.alert-description.open { 
-  max-height: 5000px;
-  overflow-y: auto;
-}
-
 .dot {
   width: 12px;
   height: 12px;
