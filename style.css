@@ -74,7 +74,7 @@ header, main {
   margin-top: 0.25rem;
 }
 .alert-description.open { 
-  max-height: 500px;
+  max-height: 5000px;
   overflow-y: auto;
 }
 
