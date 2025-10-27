@@ -1,0 +1,81 @@
+/* --- General page styles --- */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: sans-serif;
+  color: white;
+  overflow-x: hidden;
+  background-color: #000;
+}
+
+header {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 20px;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+/* --- Main layout --- */
+main {
+  position: relative;
+  z-index: 1;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.category-section {
+  padding: 10px;
+  border-radius: 10px;
+}
+
+/* --- Category colors --- */
+#police-list { background-color: #001f3f; border-radius: 10px; padding: 10px; }
+#fire-list { background-color: #8B4000; border-radius: 10px; padding: 10px; }
+#nhs-list { background-color: #004080; border-radius: 10px; padding: 10px; }
+#weather-list { background-color: #B8860B; border-radius: 10px; padding: 10px; }
+
+/* --- Alert cards --- */
+.alert-card {
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  transition: transform 0.2s;
+  background-color: inherit; /* inherit section color */
+  color: white;
+}
+
+.alert-card:hover { transform: scale(1.02); }
+
+/* --- Dot indicator --- */
+.alert-card span {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 8px;
+}
+
+/* --- Collapsible description --- */
+.alert-card div {
+  font-size: 0.9rem;
+  margin-top: 6px;
+}
+
+/* --- Canvas background --- */
+canvas#bg-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  display: block;
+  background-color: #000;
+}
