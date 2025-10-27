@@ -1,60 +1,56 @@
-const categories = [
-  {id: 'police-list', url: './data/police.json'},
-  {id: 'fire-list', url: './data/fire.json'},
-  {id: 'nhs-list', url: './data/nhs.json'},
-  {id: 'weather-list', url: './data/weather.json'}
-];
-
-async function fetchAlerts() {
-  const now = new Date();
-  document.getElementById('last-updated').innerText = `Last updated: ${now.toLocaleString()}`;
-
-  for (const cat of categories) {
+async function loadAlerts() {
+  const categories = ["police", "fire", "nhs", "weather"];
+  for (const category of categories) {
     try {
-      const res = await fetch(cat.url);
-      if (!res.ok) throw new Error('Failed to fetch JSON');
-      const data = await res.json();
-      const container = document.getElementById(cat.id);
-      container.innerHTML = '';
-
-      data.alerts.forEach(alert => {
-        const li = document.createElement('li');
-        li.className = 'alert-card';
-
-        const dot = document.createElement('span');
-        dot.className = 'dot';
-        const titleLower = alert.title.toLowerCase();
-        if (titleLower.includes('alert') || titleLower.includes('emergency')) dot.style.backgroundColor = 'red';
-        else if (titleLower.includes('warning')) dot.style.backgroundColor = 'yellow';
-        else dot.style.backgroundColor = 'green';
-
-        const title = document.createElement('span');
-        title.innerText = alert.title;
-
-        li.appendChild(dot);
-        li.appendChild(title);
-
-        if (alert.description) {
-          const desc = document.createElement('div');
-          desc.className = 'alert-description';
-          desc.innerHTML = alert.description;
-          li.appendChild(desc);
-
-          li.addEventListener('click', () => desc.classList.toggle('open'));
-        }
-
-        container.appendChild(li);
-      });
-
-    } catch(err) {
-      const container = document.getElementById(cat.id);
-      container.innerHTML = `<li class="alert-card">Error loading alerts.</li>`;
-      console.error(err);
+      const response = await fetch(`data/${category}.json?_=${Date.now()}`);
+      if (!response.ok) throw new Error("Network response was not ok");
+      const data = await response.json();
+      renderAlerts(category, data.alerts);
+      if (data.last_updated) {
+        document.getElementById("last-updated").textContent =
+          "Last updated: " + new Date(data.last_updated).toLocaleString();
+      }
+    } catch (err) {
+      document.getElementById(`${category}-list`).innerHTML = `<li>Error loading alerts: ${err.message}</li>`;
     }
   }
 }
 
-// Initial fetch
-fetchAlerts();
-// Auto-refresh every 30 min
-setInterval(fetchAlerts, 1800000);
+function renderAlerts(category, alerts) {
+  const list = document.getElementById(`${category}-list`);
+  list.innerHTML = "";
+  alerts.forEach((alert) => {
+    const li = document.createElement("li");
+    li.className = "alert-card";
+    li.innerHTML = `
+      <div class="flex items-center">
+        <span class="dot" style="background-color:${getRandomSeverityColor()}"></span>
+        <span class="font-semibold">${alert.title}</span>
+      </div>
+      <div class="alert-description">${alert.description}</div>
+    `;
+    li.addEventListener("click", () => {
+      li.querySelector(".alert-description").classList.toggle("open");
+    });
+    list.appendChild(li);
+  });
+}
+
+function getRandomSeverityColor() {
+  const colors = ["red", "yellow", "green"];
+  return colors[Math.floor(Math.random() * colors.length)];
+}
+
+// Filter buttons
+document.querySelectorAll(".filter-btn").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const target = btn.dataset.target;
+    document.querySelectorAll(".alert-section").forEach((section) => {
+      section.style.display =
+        target === "all" || section.id.startsWith(target) ? "block" : "none";
+    });
+  });
+});
+
+loadAlerts();
+setInterval(loadAlerts, 1800000); // 30 min
