@@ -10,20 +10,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
+
       - name: Install dependencies
-        run: pip install requests
-      - name: Fetch data and update JSON
-        run: |
-          python fetch_alerts.py
-      - name: Commit changes
+        run: pip install requests feedparser
+
+      - name: Fetch alerts
+        run: python fetch_alerts.py
+
+      - name: Commit & Push
         run: |
           git config --local user.name "github-actions"
           git config --local user.email "github-actions@github.com"
           git add data/*.json
           git commit -m "Update alerts"
           git push
-
