@@ -37,6 +37,8 @@ canvas#bg-canvas {
   border-radius: 0.5rem;
   transition: transform 0.2s, box-shadow 0.2s;
   cursor: pointer;
+  display: flex;
+  align-items: center;
 }
 
 .alert-card:hover {
@@ -80,7 +82,7 @@ canvas#bg-canvas {
   overflow: hidden;
   transition: max-height 0.3s ease;
   color: #e0e0e0;
-  margin-top: 0.25rem;
+  margin-left: 22px;
 }
 
 .alert-description.open {
