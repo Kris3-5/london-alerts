@@ -9,13 +9,13 @@ body, html {
 }
 
 /* Canvas */
-canvas#bg-canvas {
+#bg-canvas {
   position: fixed;
   top: 0;
   left: 0;
   z-index: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   display: block;
   background: #000;
 }
