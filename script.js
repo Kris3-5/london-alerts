@@ -1,85 +1,78 @@
-const categoryColors = {
-  police: "#1E3A8A",
-  fire: "#C2410C",
-  nhs: "#1D4ED8",
-  weather: "#B45309"
-};
+// Fetch data and render alerts
+async function fetchData(url, containerId, collapsible = false) {
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`Failed to fetch ${url}`);
+    const data = await res.json();
+    const container = document.getElementById(containerId);
+    container.innerHTML = ''; // clear previous content
 
-function getAlertSeverity(title){
-  const lower = title.toLowerCase();
-  if(lower.includes("warning")||lower.includes("fire")||lower.includes("accident")) return "critical";
-  if(lower.includes("advice")||lower.includes("notice")||lower.includes("minor")) return "moderate";
-  if(lower.includes("reminder")||lower.includes("update")||lower.includes("information")) return "info";
-  return "safe";
-}
+    data.alerts.forEach(alert => {
+      // Dot color based on category logic
+      let dotColor = 'green';
+      if (alert.title.toLowerCase().includes('warning')) dotColor = 'yellow';
+      if (alert.title.toLowerCase().includes('alert') || alert.title.toLowerCase().includes('emergency')) dotColor = 'red';
 
-function getDotColor(severity){
-  switch(severity){
-    case "critical": return "red";
-    case "moderate": return "orange";
-    case "info": return "blue";
-    case "safe": return "green";
-    default: return "gray";
-  }
-}
+      // Card container
+      const card = document.createElement('div');
+      card.className = 'alert-card p-4 rounded mb-2 shadow-md cursor-pointer';
+      card.style.position = 'relative';
+      card.style.backgroundColor = '#111'; // default dark card background
 
-async function fetchData(file, elementId, showDescription=false){
-  try{
-    const response = await fetch(file + '?t=' + new Date().getTime());
-    const data = await response.json();
-    const list = document.getElementById(elementId);
-    list.innerHTML="";
-    const alerts = data.alerts || data;
-    alerts.forEach(item=>{
-      const severity = getAlertSeverity(item.title);
-      const dotColor = getDotColor(severity);
-      const li = document.createElement("li");
-      li.className="alert-card";
+      // Colored dot
+      const dot = document.createElement('span');
+      dot.style.width = '12px';
+      dot.style.height = '12px';
+      dot.style.borderRadius = '50%';
+      dot.style.display = 'inline-block';
+      dot.style.marginRight = '8px';
+      dot.style.backgroundColor = dotColor;
 
-      const titleDiv=document.createElement("div");
-      titleDiv.className="flex items-center";
-      titleDiv.innerHTML=`<span class="dot" style="background-color:${dotColor}"></span><strong>${item.title}</strong>`;
-      li.appendChild(titleDiv);
+      // Title
+      const title = document.createElement('strong');
+      title.innerText = alert.title;
 
-      if(showDescription && item.description){
-        const descDiv=document.createElement("div");
-        descDiv.className="alert-description";
-        descDiv.innerHTML=`${item.description} <br><em>${item.date}</em>`;
-        li.appendChild(descDiv);
-        li.addEventListener("click",()=>descDiv.classList.toggle("open"));
-      }else{
-        const dateDiv=document.createElement("div");
-        dateDiv.className="text-gray-300 text-sm mt-1";
-        dateDiv.textContent=item.date;
-        li.appendChild(dateDiv);
+      // Header (dot + title)
+      const header = document.createElement('div');
+      header.style.display = 'flex';
+      header.style.alignItems = 'center';
+      header.appendChild(dot);
+      header.appendChild(title);
+      card.appendChild(header);
+
+      // Collapsible description
+      if (collapsible && alert.description) {
+        const desc = document.createElement('div');
+        desc.innerHTML = alert.description;
+        desc.style.display = 'none';
+        desc.style.marginTop = '6px';
+        desc.style.fontSize = '0.9rem';
+        card.appendChild(desc);
+
+        card.addEventListener('click', () => {
+          desc.style.display = desc.style.display === 'none' ? 'block' : 'none';
+        });
       }
 
-      list.appendChild(li);
+      container.appendChild(card);
     });
-  }catch(err){
-    console.error(`Error loading ${file}`,err);
+  } catch (err) {
+    console.error(err);
   }
 }
 
-async function updateAlerts(){
-  await fetchData('data/police.json','police-list');
-  await fetchData('data/fire.json','fire-list',true);
-  await fetchData('data/nhs.json','nhs-list',true);
-  await fetchData('data/weather.json','weather-list',true);
-  document.getElementById("last-updated").textContent=`Last updated: ${new Date().toLocaleString()}`;
-}
+// Map category IDs to JSON paths
+const categories = [
+  {id: 'police-list', url: './data/police.json', collapsible: true},
+  {id: 'fire-list', url: './data/fire.json', collapsible: true},
+  {id: 'nhs-list', url: './data/nhs.json', collapsible: true},
+  {id: 'weather-list', url: './data/weather.json', collapsible: true}
+];
 
-updateAlerts();
-setInterval(updateAlerts,30*60*1000); // 30-min refresh
+// Initial fetch
+categories.forEach(cat => fetchData(cat.url, cat.id, cat.collapsible));
 
-// Filter Buttons
-const tabs=document.querySelectorAll(".filter-btn");
-tabs.forEach(tab=>{
-  tab.addEventListener("click",()=>{
-    const target=tab.getAttribute("data-target");
-    document.querySelectorAll(".alert-section").forEach(section=>{
-      if(target==="all") section.classList.remove("hidden");
-      else section.classList.toggle("hidden",!section.id.startsWith(target));
-    });
-  });
-});
+// Auto-update every 30 minutes (1800000 ms)
+setInterval(() => {
+  categories.forEach(cat => fetchData(cat.url, cat.id, cat.collapsible));
+}, 1800000);
