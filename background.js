@@ -1,54 +1,38 @@
-const canvas = document.getElementById('bg-canvas');
-const ctx = canvas.getContext('2d');
+const canvas = document.getElementById("bg-canvas");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-function resizeCanvas() {
+function random(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
+const lines = Array.from({ length: 40 }, () => ({
+  x: random(0, canvas.width),
+  y: random(0, canvas.height),
+  dx: random(-0.5, 0.5),
+  dy: random(-0.5, 0.5),
+}));
+
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.strokeStyle = "rgba(255,255,255,0.1)";
+  lines.forEach((l) => {
+    ctx.beginPath();
+    ctx.moveTo(l.x, l.y);
+    ctx.lineTo(l.x + 10, l.y + 10);
+    ctx.stroke();
+    l.x += l.dx;
+    l.y += l.dy;
+    if (l.x < 0 || l.x > canvas.width) l.dx *= -1;
+    if (l.y < 0 || l.y > canvas.height) l.dy *= -1;
+  });
+  requestAnimationFrame(animate);
+}
+
+animate();
+
+window.addEventListener("resize", () => {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
-}
-window.addEventListener('resize', resizeCanvas);
-resizeCanvas();
-
-const points = [];
-const numPoints = 80;
-
-for (let i = 0; i < numPoints; i++) {
-  points.push({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    dx: (Math.random() - 0.5) * 0.3,
-    dy: (Math.random() - 0.5) * 0.3
-  });
-}
-
-function draw() {
-  ctx.fillStyle = '#0d0d0d';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  for (let i = 0; i < points.length; i++) {
-    for (let j = i + 1; j < points.length; j++) {
-      const dx = points[i].x - points[j].x;
-      const dy = points[i].y - points[j].y;
-      const dist = Math.sqrt(dx*dx + dy*dy);
-      if (dist < 150) {
-        ctx.strokeStyle = `rgba(255,255,255,${1 - dist / 150})`;
-        ctx.beginPath();
-        ctx.moveTo(points[i].x, points[i].y);
-        ctx.lineTo(points[j].x, points[j].y);
-        ctx.stroke();
-      }
-    }
-  }
-
-  points.forEach(p => {
-    p.x += p.dx;
-    p.y += p.dy;
-    if (p.x < 0) p.x = canvas.width;
-    if (p.x > canvas.width) p.x = 0;
-    if (p.y < 0) p.y = canvas.height;
-    if (p.y > canvas.height) p.y = 0;
-  });
-
-  requestAnimationFrame(draw);
-}
-
-draw();
+});
