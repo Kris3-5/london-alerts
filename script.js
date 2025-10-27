@@ -1,11 +1,22 @@
-function getAlertColor(title) {
+function getAlertSeverity(title) {
   const lower = title.toLowerCase();
-  if (lower.includes("warning") || lower.includes("fire") || lower.includes("accident")) return "bg-red-100 text-red-800";
-  if (lower.includes("advice") || lower.includes("notice")) return "bg-yellow-100 text-yellow-800";
-  return "bg-green-100 text-green-800";
+  if (lower.includes("warning") || lower.includes("fire") || lower.includes("accident")) return "critical";
+  if (lower.includes("advice") || lower.includes("notice") || lower.includes("minor")) return "moderate";
+  if (lower.includes("reminder") || lower.includes("update") || lower.includes("information")) return "info";
+  return "safe";
 }
 
-async function fetchData(file, elementId) {
+function getDotColor(severity) {
+  switch (severity) {
+    case "critical": return "red";
+    case "moderate": return "orange";
+    case "info": return "blue";
+    case "safe": return "green";
+    default: return "gray";
+  }
+}
+
+async function fetchData(file, elementId, showDescription = false) {
   try {
     const response = await fetch(file);
     const data = await response.json();
@@ -13,20 +24,30 @@ async function fetchData(file, elementId) {
     list.innerHTML = "";
 
     data.forEach(item => {
+      const severity = getAlertSeverity(item.title);
+      const dotColor = getDotColor(severity);
+
       const li = document.createElement("li");
-      const colorClass = getAlertColor(item.title);
-      li.className = `p-2 mb-1 rounded cursor-pointer ${colorClass}`;
+      li.className = "alert-card p-3 mb-2 rounded cursor-pointer";
 
-      // Collapsible details
-      li.innerHTML = `
-        <div class="font-semibold">${item.title}</div>
-        <div class="text-sm text-gray-600 hidden">${item.date}</div>
-      `;
+      const titleDiv = document.createElement("div");
+      titleDiv.className = "flex items-center";
+      titleDiv.innerHTML = `<span class="dot" style="background-color:${dotColor}"></span><strong>${item.title}</strong>`;
+      li.appendChild(titleDiv);
 
-      li.addEventListener("click", () => {
-        const detail = li.querySelector("div:last-child");
-        detail.classList.toggle("hidden");
-      });
+      if (showDescription && item.description) {
+        const descDiv = document.createElement("div");
+        descDiv.className = "text-gray-300 text-sm mt-1 hidden";
+        descDiv.innerHTML = `${item.description} <br><em>${item.date}</em>`;
+        li.appendChild(descDiv);
+
+        li.addEventListener("click", () => descDiv.classList.toggle("hidden"));
+      } else {
+        const dateDiv = document.createElement("div");
+        dateDiv.className = "text-gray-400 text-sm mt-1";
+        dateDiv.textContent = item.date;
+        li.appendChild(dateDiv);
+      }
 
       list.appendChild(li);
     });
@@ -37,30 +58,24 @@ async function fetchData(file, elementId) {
 
 async function updateAlerts() {
   await fetchData('data/police.json', 'police-list');
-  await fetchData('data/fire.json', 'fire-list');
-  await fetchData('data/nhs.json', 'nhs-list');
-  await fetchData('data/weather.json', 'weather-list');
+  await fetchData('data/fire.json', 'fire-list', true);
+  await fetchData('data/nhs.json', 'nhs-list', true);
+  await fetchData('data/weather.json', 'weather-list', true);
 
   document.getElementById("last-updated").textContent = `Last updated: ${new Date().toLocaleString()}`;
 }
 
-// Initial load
 updateAlerts();
-
-// Auto-refresh every 15 minutes
 setInterval(updateAlerts, 15 * 60 * 1000);
 
-// --- Filter Tabs ---
+// Filter Tabs
 const tabs = document.querySelectorAll(".filter-btn");
 tabs.forEach(tab => {
   tab.addEventListener("click", () => {
     const target = tab.getAttribute("data-target");
     document.querySelectorAll(".alert-section").forEach(section => {
-      if (target === "all") {
-        section.classList.remove("hidden");
-      } else {
-        section.classList.toggle("hidden", !section.id.startsWith(target));
-      }
+      if (target === "all") section.classList.remove("hidden");
+      else section.classList.toggle("hidden", !section.id.startsWith(target));
     });
   });
 });
