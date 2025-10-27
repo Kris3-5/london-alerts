@@ -16,7 +16,7 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: pip install feedparser
 
       - name: Fetch Alerts
@@ -28,4 +28,4 @@ jobs:
           git config --global user.email "actions@github.com"
           git add data/*.json
           git commit -m "Update alerts [skip ci]" --allow-empty
-          git https://${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }} HEAD:main
+          git push https://${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }} HEAD:main
