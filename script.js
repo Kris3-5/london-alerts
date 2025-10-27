@@ -62,7 +62,7 @@ async function updateAlerts(){
 }
 
 updateAlerts();
-setInterval(updateAlerts,15*60*1000); // Frontend auto-refresh every 15 minutes
+setInterval(updateAlerts,30*60*1000); // Refresh every 30 minutes
 
 // Filter Tabs
 const tabs=document.querySelectorAll(".filter-btn");
