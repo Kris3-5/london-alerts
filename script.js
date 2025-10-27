@@ -12,6 +12,7 @@ async function fetchAlerts() {
   for (const cat of categories) {
     try {
       const res = await fetch(cat.url);
+      if (!res.ok) throw new Error('Failed to fetch JSON');
       const data = await res.json();
       const container = document.getElementById(cat.id);
       container.innerHTML = '';
@@ -39,22 +40,21 @@ async function fetchAlerts() {
           desc.innerHTML = alert.description;
           li.appendChild(desc);
 
-          li.addEventListener('click', () => {
-            desc.classList.toggle('open');
-          });
+          li.addEventListener('click', () => desc.classList.toggle('open'));
         }
 
         container.appendChild(li);
       });
+
     } catch(err) {
-      console.error(err);
       const container = document.getElementById(cat.id);
       container.innerHTML = `<li class="alert-card">Error loading alerts.</li>`;
+      console.error(err);
     }
   }
 }
 
 // Initial fetch
 fetchAlerts();
-// Refresh every 30 minutes
+// Auto-refresh every 30 min
 setInterval(fetchAlerts, 1800000);
