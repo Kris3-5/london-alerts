@@ -1,5 +1,6 @@
-import feedparser, json, os
-feeds={
+import feedparser, json, os, sys
+
+feeds = {
   "police":"https://news.met.police.uk/rss/all-news",
   "fire":"https://www.london-fire.gov.uk/news/rss/",
   "nhs":"https://www.england.nhs.uk/news/feed/",
@@ -7,15 +8,30 @@ feeds={
 }
 
 def fetch_feed(url):
-  d=feedparser.parse(url)
-  alerts=[]
-  for e in d.entries[:5]:
-    alerts.append({"title":e.get("title","No title"),"description":e.get("summary","")})
-  if not alerts: alerts.append({"title":"No recent alerts","description":"None currently."})
-  return alerts
+  try:
+      d = feedparser.parse(url)
+      alerts = []
+      if d.bozo:
+          print(f"Warning: feed parse error for {url}")
+      for e in d.entries[:5]: # latest 5 entries
+          alerts.append({
+              "title": e.get("title","No title"),
+              "description": e.get("summary","")
+          })
+      if not alerts: 
+          alerts.append({"title":"No recent alerts","description":"None currently."})
+      return alerts
+  except Exception as e:
+      print(f"Error fetching {url}: {e}")
+      return [{"title":"Error","description":str(e)}]
 
-os.makedirs("data",exist_ok=True)
-for key,url in feeds.items():
-  data=fetch_feed(url)
-  with open(f"data/{key}.json","w",encoding="utf-8") as f:
-    json.dump(data,f,ensure_ascii=False,indent=2)
+os.makedirs("data", exist_ok=True)
+
+for key, url in feeds.items():
+    data = fetch_feed(url)
+    try:
+        with open(f"data/{key}.json", "w", encoding="utf-8") as f:
+             json.dump(data, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        print(f"Error writing {key}.json: {e}")
+        sys.exit(1)
