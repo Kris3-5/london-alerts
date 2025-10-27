@@ -1,3 +1,10 @@
+const categoryColors = {
+  police: "#1E3A8A",
+  fire: "#C2410C",
+  nhs: "#1D4ED8",
+  weather: "#B45309"
+};
+
 function getAlertSeverity(title){
   const lower = title.toLowerCase();
   if(lower.includes("warning")||lower.includes("fire")||lower.includes("accident")) return "critical";
@@ -18,15 +25,17 @@ function getDotColor(severity){
 
 async function fetchData(file, elementId, showDescription=false){
   try{
-    const response = await fetch(file);
+    const response = await fetch(file + '?t=' + new Date().getTime());
     const data = await response.json();
     const list = document.getElementById(elementId);
     list.innerHTML="";
-    data.forEach(item=>{
+    const alerts = data.alerts || data; // support timestamp JSON
+    alerts.forEach(item=>{
       const severity = getAlertSeverity(item.title);
       const dotColor = getDotColor(severity);
       const li = document.createElement("li");
-      li.className="alert-card p-3 mb-2 rounded cursor-pointer flex flex-col";
+      li.className="alert-card";
+      li.style.backgroundColor = categoryColors[elementId.replace('-list','')];
 
       const titleDiv=document.createElement("div");
       titleDiv.className="flex items-center";
@@ -62,7 +71,7 @@ async function updateAlerts(){
 }
 
 updateAlerts();
-setInterval(updateAlerts,30*60*1000); // Refresh every 30 minutes
+setInterval(updateAlerts,30*60*1000); // refresh every 30 minutes
 
 // Filter Tabs
 const tabs=document.querySelectorAll(".filter-btn");
