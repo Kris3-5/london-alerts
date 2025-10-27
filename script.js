@@ -12,17 +12,38 @@ async function loadAlerts(type){
   }
 }
 
-function renderAlerts(type,data){
-  const list=document.getElementById(`${type}-list`);
-  list.innerHTML='';
-  if(!data||data.length===0){list.innerHTML='<li>No recent alerts</li>';return;}
-  data.forEach(item=>{
-    const li=document.createElement('li');
-    li.className='alert-card';
-    li.innerHTML=`<div><span class="dot" style="color:${getDotColor(type)}"></span>
-      <strong>${item.title||'Untitled Alert'}</strong></div>
-      <div class="alert-description">${item.description||''}</div>`;
-    li.addEventListener('click',()=>li.querySelector('.alert-description').classList.toggle('open'));
+function renderAlerts(type, data) {
+  const list = document.getElementById(`${type}-list`);
+  list.innerHTML = '';
+
+  if (!data || data.length === 0) {
+    list.innerHTML = '<li>No recent alerts</li>';
+    return;
+  }
+
+  data.forEach(item => {
+    const li = document.createElement('li');
+    li.className = 'alert-card';
+
+    // Safely convert HTML entities
+    const description = item.description || '';
+    const div = document.createElement('div');
+    div.innerHTML = `
+      <div>
+        <span class="dot" style="color:${getDotColor(type)}"></span>
+        <strong>${item.title || 'Untitled Alert'}</strong>
+      </div>
+      <div class="alert-description">${description}</div>
+    `;
+
+    const alertDesc = div.querySelector('.alert-description');
+
+    // Expand/collapse on click
+    li.addEventListener('click', () => {
+      alertDesc.classList.toggle('open');
+    });
+
+    li.appendChild(div);
     list.appendChild(li);
   });
 }
