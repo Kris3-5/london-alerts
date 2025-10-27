@@ -14,9 +14,17 @@ def fetch_feed(url):
       if d.bozo:
           print(f"Warning: feed parse error for {url}")
       for e in d.entries[:5]: # latest 5 entries
+          full_text = ""
+          if 'content' in e:
+             full_text = e.content[0].value
+          elif 'summary' in e:
+             full_text = e.summary
+          elif 'description' in e:
+             full_text = e.description
           alerts.append({
-              "title": e.get("title","No title"),
-              "description": e.get("summary","")
+             "title": e.get("title","No title"),
+             "description": full_text,
+             "published": e.get("published","")
           })
       if not alerts: 
           alerts.append({"title":"No recent alerts","description":"None currently."})
