@@ -2,12 +2,11 @@ import feedparser
 import json
 from datetime import datetime
 
-# Working RSS feeds
 feeds = {
     "police": "https://news.met.police.uk/feed/",
     "fire": "https://www.london-fire.gov.uk/news/feed/",
     "nhs": "https://www.england.nhs.uk/feed/",
-    "weather": "https://www.bbc.co.uk/weather/feeds"  # example working feed
+    "weather": "https://www.bbc.co.uk/weather/feeds"
 }
 
 def fetch_feed(url):
@@ -17,7 +16,6 @@ def fetch_feed(url):
         for entry in parsed.entries[:20]:
             title = entry.get("title", "No Title")
             description = entry.get("description", "") or entry.get("summary", "")
-            # Safe date parsing
             try:
                 date_iso = datetime(*entry.published_parsed[:6]).isoformat()
             except:
@@ -42,7 +40,6 @@ def fetch_feed(url):
             "date": datetime.now().isoformat()
         }]
 
-# Fetch all feeds and save JSON
 for category, url in feeds.items():
     alerts = fetch_feed(url)
     data = {
