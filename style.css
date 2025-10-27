@@ -1,81 +1,88 @@
-/* --- General page styles --- */
 body, html {
   margin: 0;
   padding: 0;
   height: 100%;
+  background-color: #0d0d0d;
+  color: white;
   font-family: sans-serif;
-  color: white;
   overflow-x: hidden;
-  background-color: #000;
 }
 
-header {
-  position: relative;
-  z-index: 1;
-  text-align: center;
-  padding: 20px;
-  font-size: 2rem;
-  font-weight: bold;
-}
-
-/* --- Main layout --- */
-main {
-  position: relative;
-  z-index: 1;
-  padding: 20px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 16px;
-}
-
-.category-section {
-  padding: 10px;
-  border-radius: 10px;
-}
-
-/* --- Category colors --- */
-#police-list { background-color: #001f3f; border-radius: 10px; padding: 10px; }
-#fire-list { background-color: #8B4000; border-radius: 10px; padding: 10px; }
-#nhs-list { background-color: #004080; border-radius: 10px; padding: 10px; }
-#weather-list { background-color: #B8860B; border-radius: 10px; padding: 10px; }
-
-/* --- Alert cards --- */
-.alert-card {
-  padding: 10px;
-  border-radius: 8px;
-  margin-bottom: 8px;
-  cursor: pointer;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-  transition: transform 0.2s;
-  background-color: inherit; /* inherit section color */
-  color: white;
-}
-
-.alert-card:hover { transform: scale(1.02); }
-
-/* --- Dot indicator --- */
-.alert-card span {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  display: inline-block;
-  margin-right: 8px;
-}
-
-/* --- Collapsible description --- */
-.alert-card div {
-  font-size: 0.9rem;
-  margin-top: 6px;
-}
-
-/* --- Canvas background --- */
 canvas#bg-canvas {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 0;
-  display: block;
-  background-color: #000;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+}
+
+.alert-section {
+  padding: 1rem;
+  border-radius: 0.75rem;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+/* Category Gradients */
+#police-section { background: linear-gradient(135deg, #1E3A8A, #3B82F6); }
+#fire-section { background: linear-gradient(135deg, #C2410C, #F97316); }
+#nhs-section { background: linear-gradient(135deg, #1D4ED8, #3B82F6); }
+#weather-section { background: linear-gradient(135deg, #B45309, #FACC15); }
+
+.alert-card {
+  background-color: rgba(0,0,0,0.5);
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+  border-radius: 0.5rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.alert-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 10px rgba(255,255,255,0.3);
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 10px;
+  box-shadow: 0 0 4px currentColor;
+}
+
+.filter-btn {
+  padding: 0.5rem 1.2rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  color: white;
+  margin: 0.25rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.filter-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 10px rgba(255,255,255,0.5);
+}
+
+/* Button Colors */
+.filter-btn[data-target="police"] { background-color: #1E3A8A; }
+.filter-btn[data-target="fire"] { background-color: #C2410C; }
+.filter-btn[data-target="nhs"] { background-color: #1D4ED8; }
+.filter-btn[data-target="weather"] { background-color: #B45309; }
+.filter-btn[data-target="all"] { background-color: #4B5563; }
+
+.alert-description {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  color: #e0e0e0;
+  margin-top: 0.25rem;
+}
+
+.alert-description.open {
+  max-height: 500px;
 }
