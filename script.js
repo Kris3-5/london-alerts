@@ -11,11 +11,23 @@ async function fetchData(file, elementId) {
     const data = await response.json();
     const list = document.getElementById(elementId);
     list.innerHTML = "";
+
     data.forEach(item => {
       const li = document.createElement("li");
       const colorClass = getAlertColor(item.title);
-      li.className = `p-2 mb-1 rounded ${colorClass}`;
-      li.innerHTML = `<strong>${item.title}</strong> <span class="text-sm text-gray-600">(${item.date})</span>`;
+      li.className = `p-2 mb-1 rounded cursor-pointer ${colorClass}`;
+
+      // Collapsible details
+      li.innerHTML = `
+        <div class="font-semibold">${item.title}</div>
+        <div class="text-sm text-gray-600 hidden">${item.date}</div>
+      `;
+
+      li.addEventListener("click", () => {
+        const detail = li.querySelector("div:last-child");
+        detail.classList.toggle("hidden");
+      });
+
       list.appendChild(li);
     });
   } catch (err) {
@@ -35,6 +47,20 @@ async function updateAlerts() {
 // Initial load
 updateAlerts();
 
-// Optional: auto-refresh every 15 minutes
+// Auto-refresh every 15 minutes
 setInterval(updateAlerts, 15 * 60 * 1000);
 
+// --- Filter Tabs ---
+const tabs = document.querySelectorAll(".filter-btn");
+tabs.forEach(tab => {
+  tab.addEventListener("click", () => {
+    const target = tab.getAttribute("data-target");
+    document.querySelectorAll(".alert-section").forEach(section => {
+      if (target === "all") {
+        section.classList.remove("hidden");
+      } else {
+        section.classList.toggle("hidden", !section.id.startsWith(target));
+      }
+    });
+  });
+});
