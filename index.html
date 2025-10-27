@@ -5,39 +5,61 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>London Alerts Monitor</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #121212;
+      color: white;
+      background-image: url('https://www.transparenttextures.com/patterns/geometry2.png'); /* subtle geometric pattern */
+      background-size: cover;
+    }
+    .alert-section {
+      background-color: #1E1E1E;
+    }
+    .alert-card:hover {
+      background-color: #2A2A2A;
+      transition: background-color 0.2s;
+    }
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 8px;
+    }
+  </style>
 </head>
-<body class="bg-gray-100 font-sans">
+<body class="font-sans">
 
-<header class="bg-blue-700 text-white p-4 text-center">
-  <h1 class="text-3xl font-bold">London Alerts Monitor</h1>
-  <p class="mt-1">Police | Fire | NHS | Weather</p>
-  <p id="last-updated" class="text-sm mt-1"></p>
+<header class="p-6 text-center">
+  <h1 class="text-4xl font-bold mb-2">London Alerts Monitor</h1>
+  <p class="text-gray-300">Police | Fire | NHS | Weather</p>
+  <p id="last-updated" class="text-gray-400 mt-1"></p>
 </header>
 
-<main class="p-4">
+<main class="p-6">
   <!-- Filter Tabs -->
-  <div class="flex justify-center mb-4 space-x-4">
-    <button class="filter-btn px-4 py-2 bg-blue-500 text-white rounded" data-target="police">Police</button>
-    <button class="filter-btn px-4 py-2 bg-blue-500 text-white rounded" data-target="fire">Fire</button>
+  <div class="flex justify-center mb-6 space-x-4 flex-wrap">
+    <button class="filter-btn px-4 py-2 bg-blue-600 text-white rounded" data-target="police">Police</button>
+    <button class="filter-btn px-4 py-2 bg-orange-600 text-white rounded" data-target="fire">Fire</button>
     <button class="filter-btn px-4 py-2 bg-blue-500 text-white rounded" data-target="nhs">NHS</button>
-    <button class="filter-btn px-4 py-2 bg-blue-500 text-white rounded" data-target="weather">Weather</button>
-    <button class="filter-btn px-4 py-2 bg-gray-500 text-white rounded" data-target="all">All</button>
+    <button class="filter-btn px-4 py-2 bg-green-600 text-white rounded" data-target="weather">Weather</button>
+    <button class="filter-btn px-4 py-2 bg-gray-600 text-white rounded" data-target="all">All</button>
   </div>
 
   <div class="grid gap-6 md:grid-cols-2">
-    <section class="alert-section bg-white rounded-lg shadow p-4" id="police-section">
+    <section class="alert-section rounded-lg shadow p-4" id="police-section">
       <h2 class="text-xl font-semibold mb-2">Police Alerts</h2>
       <ul id="police-list"></ul>
     </section>
-    <section class="alert-section bg-white rounded-lg shadow p-4" id="fire-section">
+    <section class="alert-section rounded-lg shadow p-4" id="fire-section">
       <h2 class="text-xl font-semibold mb-2">Fire Alerts</h2>
       <ul id="fire-list"></ul>
     </section>
-    <section class="alert-section bg-white rounded-lg shadow p-4" id="nhs-section">
+    <section class="alert-section rounded-lg shadow p-4" id="nhs-section">
       <h2 class="text-xl font-semibold mb-2">NHS & Health</h2>
       <ul id="nhs-list"></ul>
     </section>
-    <section class="alert-section bg-white rounded-lg shadow p-4" id="weather-section">
+    <section class="alert-section rounded-lg shadow p-4" id="weather-section">
       <h2 class="text-xl font-semibold mb-2">Weather Alerts</h2>
       <ul id="weather-list"></ul>
     </section>
