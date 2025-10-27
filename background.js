@@ -18,7 +18,7 @@ for (let i = 0; i < 50; i++) {
     size: random(20, 80),
     dx: random(-0.2, 0.2),
     dy: random(-0.2, 0.2),
-    color: `rgba(255,255,255,${random(0.05,0.15)})`,
+    color: `rgba(255,255,255,${random(0.05,0.1)})`,
     angle: random(0, 360),
     dAngle: random(-0.2, 0.2)
   });
@@ -27,13 +27,14 @@ for (let i = 0; i < 50; i++) {
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+  // Draw connecting lines
   for (let i = 0; i < shapes.length; i++) {
     for (let j = i + 1; j < shapes.length; j++) {
       const dx = shapes[i].x - shapes[j].x;
       const dy = shapes[i].y - shapes[j].y;
       const dist = Math.sqrt(dx*dx + dy*dy);
       if (dist < 150) {
-        ctx.strokeStyle = `rgba(255,255,255,0.05)`;
+        ctx.strokeStyle = `rgba(255,255,255,0.03)`;
         ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.moveTo(shapes[i].x, shapes[i].y);
