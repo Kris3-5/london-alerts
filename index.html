@@ -8,31 +8,42 @@
 </head>
 <body class="bg-gray-100 font-sans">
 
-  <header class="bg-blue-700 text-white p-4 text-center">
-    <h1 class="text-3xl font-bold">London Alerts Monitor</h1>
-    <p class="mt-1">Police | Fire | NHS | Weather</p>
-    <p id="last-updated" class="text-sm mt-1"></p>
-  </header>
+<header class="bg-blue-700 text-white p-4 text-center">
+  <h1 class="text-3xl font-bold">London Alerts Monitor</h1>
+  <p class="mt-1">Police | Fire | NHS | Weather</p>
+  <p id="last-updated" class="text-sm mt-1"></p>
+</header>
 
-  <main class="p-4 grid gap-6 md:grid-cols-2">
-    <section class="bg-white rounded-lg shadow p-4">
+<main class="p-4">
+  <!-- Filter Tabs -->
+  <div class="flex justify-center mb-4 space-x-4">
+    <button class="filter-btn px-4 py-2 bg-blue-500 text-white rounded" data-target="police">Police</button>
+    <button class="filter-btn px-4 py-2 bg-blue-500 text-white rounded" data-target="fire">Fire</button>
+    <button class="filter-btn px-4 py-2 bg-blue-500 text-white rounded" data-target="nhs">NHS</button>
+    <button class="filter-btn px-4 py-2 bg-blue-500 text-white rounded" data-target="weather">Weather</button>
+    <button class="filter-btn px-4 py-2 bg-gray-500 text-white rounded" data-target="all">All</button>
+  </div>
+
+  <div class="grid gap-6 md:grid-cols-2">
+    <section class="alert-section bg-white rounded-lg shadow p-4" id="police-section">
       <h2 class="text-xl font-semibold mb-2">Police Alerts</h2>
       <ul id="police-list"></ul>
     </section>
-    <section class="bg-white rounded-lg shadow p-4">
+    <section class="alert-section bg-white rounded-lg shadow p-4" id="fire-section">
       <h2 class="text-xl font-semibold mb-2">Fire Alerts</h2>
       <ul id="fire-list"></ul>
     </section>
-    <section class="bg-white rounded-lg shadow p-4">
+    <section class="alert-section bg-white rounded-lg shadow p-4" id="nhs-section">
       <h2 class="text-xl font-semibold mb-2">NHS & Health</h2>
       <ul id="nhs-list"></ul>
     </section>
-    <section class="bg-white rounded-lg shadow p-4">
+    <section class="alert-section bg-white rounded-lg shadow p-4" id="weather-section">
       <h2 class="text-xl font-semibold mb-2">Weather Alerts</h2>
       <ul id="weather-list"></ul>
     </section>
-  </main>
+  </div>
+</main>
 
-  <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
