@@ -86,3 +86,26 @@ header, main {
   margin-right: 10px;
   box-shadow: 0 0 4px currentColor;
 }
+.read-more-btn {
+  margin-top: 0.25rem;
+  background: rgba(255,255,255,0.1);
+  border: none;
+  color: #fff;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background 0.2s;
+}
+.read-more-btn:hover { background: rgba(255,255,255,0.2); }
+
+.alert-description {
+  max-height: 3.5em; /* collapsed height */
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  color: #e0e0e0;
+  margin-top: 0.25rem;
+}
+.alert-description.open {
+  max-height: 1000px; /* expanded height */
+}
