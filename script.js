@@ -1,5 +1,5 @@
 async function loadAlerts(type){
-  const url=`data/${type}.json?_=${Date.now()}`;
+  const url=`data/${type}.json?_=${Date.now()}`;  // prevent caching
   try{
     const res=await fetch(url);
     if(!res.ok)throw new Error("Network error");
@@ -12,52 +12,59 @@ async function loadAlerts(type){
   }
 }
 
-function renderAlerts(type, data) {
-  const list = document.getElementById(`${type}-list`);
-  list.innerHTML = '';
+function renderAlerts(type, data){
+  const list=document.getElementById(`${type}-list`);
+  list.innerHTML='';
+  if(!data || data.length===0){list.innerHTML='<li>No recent alerts</li>';return;}
 
-  if (!data || data.length === 0) {
-    list.innerHTML = '<li>No recent alerts</li>';
-    return;
-  }
+  data.forEach(item=>{
+    const li=document.createElement('li');
+    li.className='alert-card';
 
-  data.forEach(item => {
-    const li = document.createElement('li');
-    li.className = 'alert-card';
-
-    // Safely convert HTML entities
     const description = item.description || '';
-    const div = document.createElement('div');
-    div.innerHTML = `
+    const title = item.title || 'Untitled Alert';
+    const timestamp = item.published || ''; // will use if available
+
+    // Create inner HTML
+    li.innerHTML = `
       <div>
         <span class="dot" style="color:${getDotColor(type)}"></span>
-        <strong>${item.title || 'Untitled Alert'}</strong>
+        <strong>${title}</strong>
+        ${timestamp ? `<span class="text-gray-300 text-sm ml-2">(${formatDate(timestamp)})</span>` : ''}
       </div>
-      <div class="alert-description">${description}</div>
+      <div class="alert-description collapsed">${description}</div>
+      <button class="read-more-btn">Read More</button>
     `;
 
-    const alertDesc = div.querySelector('.alert-description');
+    const descDiv = li.querySelector('.alert-description');
+    const btn = li.querySelector('.read-more-btn');
 
-    // Expand/collapse on click
-    li.addEventListener('click', () => {
-      alertDesc.classList.toggle('open');
+    // Toggle Read More / Less
+    btn.addEventListener('click', ()=>{
+      descDiv.classList.toggle('open');
+      if(descDiv.classList.contains('open')){
+        btn.textContent='Read Less';
+      } else {
+        btn.textContent='Read More';
+      }
     });
 
-    li.appendChild(div);
     list.appendChild(li);
   });
 }
 
+// Dot colors
 function getDotColor(type){
   switch(type){
-    case 'police':return '#60A5FA';
-    case 'fire':return '#F87171';
-    case 'nhs':return '#3B82F6';
-    case 'weather':return '#FACC15';
-    default:return '#fff';
+    case 'police': return '#60A5FA';
+    case 'fire': return '#F87171';
+    case 'nhs': return '#3B82F6';
+    case 'weather': return '#FACC15';
+    default: return '#fff';
   }
 }
 
+// Filter buttons
 document.querySelectorAll('.filter-btn').forEach(btn=>{
   btn.addEventListener('click',()=>filterSections(btn.dataset.target));
 });
@@ -65,6 +72,14 @@ function filterSections(target){
   document.querySelectorAll('.alert-section').forEach(sec=>{
     sec.style.display=(target==='all'||sec.id.includes(target))?'block':'none';
   });
+}
+
+// Format timestamp if present
+function formatDate(dateStr){
+  try{
+    const d = new Date(dateStr);
+    return d.toLocaleString();
+  }catch(e){ return dateStr; }
 }
 
 async function init(){
