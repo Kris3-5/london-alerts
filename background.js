@@ -9,58 +9,57 @@ window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
 
 let shapes = [];
-function random(min, max) { return Math.random() * (max - min) + min; }
+function random(min,max){ return Math.random()*(max-min)+min; }
 
-for (let i = 0; i < 50; i++) {
+for(let i=0;i<60;i++){
   shapes.push({
-    x: random(0, canvas.width),
-    y: random(0, canvas.height),
-    size: random(20, 80),
-    dx: random(-0.2, 0.2),
-    dy: random(-0.2, 0.2),
-    color: `rgba(255,255,255,${random(0.05,0.1)})`,
-    angle: random(0, 360),
-    dAngle: random(-0.2, 0.2)
+    x:random(0,canvas.width),
+    y:random(0,canvas.height),
+    size:random(20,60),
+    dx:random(-0.2,0.2),
+    dy:random(-0.2,0.2),
+    color:`rgba(255,255,255,${random(0.05,0.12)})`,
+    angle:random(0,360),
+    dAngle:random(-0.2,0.2)
   });
 }
 
-function draw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
 
-  // Draw connecting lines
-  for (let i = 0; i < shapes.length; i++) {
-    for (let j = i + 1; j < shapes.length; j++) {
-      const dx = shapes[i].x - shapes[j].x;
-      const dy = shapes[i].y - shapes[j].y;
-      const dist = Math.sqrt(dx*dx + dy*dy);
-      if (dist < 150) {
-        ctx.strokeStyle = `rgba(255,255,255,0.03)`;
-        ctx.lineWidth = 1;
+  for(let i=0;i<shapes.length;i++){
+    for(let j=i+1;j<shapes.length;j++){
+      const dx=shapes[i].x-shapes[j].x;
+      const dy=shapes[i].y-shapes[j].y;
+      const dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist<150){
+        ctx.strokeStyle=`rgba(255,255,255,0.03)`;
+        ctx.lineWidth=1;
         ctx.beginPath();
-        ctx.moveTo(shapes[i].x, shapes[i].y);
-        ctx.lineTo(shapes[j].x, shapes[j].y);
+        ctx.moveTo(shapes[i].x,shapes[i].y);
+        ctx.lineTo(shapes[j].x,shapes[j].y);
         ctx.stroke();
       }
     }
   }
 
-  shapes.forEach(shape => {
+  shapes.forEach(shape=>{
     ctx.save();
-    ctx.translate(shape.x, shape.y);
-    ctx.rotate(shape.angle * Math.PI/180);
-    ctx.fillStyle = shape.color;
+    ctx.translate(shape.x,shape.y);
+    ctx.rotate(shape.angle*Math.PI/180);
+    ctx.fillStyle=shape.color;
     ctx.beginPath();
     ctx.moveTo(0,-shape.size/2);
     for(let i=0;i<5;i++){
-      ctx.lineTo(shape.size/2 * Math.cos(i*144*Math.PI/180), shape.size/2 * Math.sin(i*144*Math.PI/180));
+      ctx.lineTo(shape.size/2*Math.cos(i*144*Math.PI/180), shape.size/2*Math.sin(i*144*Math.PI/180));
     }
     ctx.closePath();
     ctx.fill();
     ctx.restore();
 
-    shape.x += shape.dx;
-    shape.y += shape.dy;
-    shape.angle += shape.dAngle;
+    shape.x+=shape.dx;
+    shape.y+=shape.dy;
+    shape.angle+=shape.dAngle;
 
     if(shape.x<-100) shape.x=canvas.width+100;
     if(shape.x>canvas.width+100) shape.x=-100;
