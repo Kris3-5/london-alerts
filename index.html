@@ -10,7 +10,7 @@
       margin: 0;
       padding: 0;
       height: 100%;
-      background-color: #121212;
+      background-color: #0d0d0d;
       color: white;
       font-family: sans-serif;
       overflow-x: hidden;
@@ -26,48 +26,75 @@
     }
 
     .alert-section {
-      background-color: #1E1E1E;
       padding: 1rem;
       border-radius: 0.75rem;
       margin-bottom: 1rem;
+      color: white;
     }
 
+    /* Category Gradients */
+    #police-section { background: linear-gradient(135deg, #1E3A8A, #3B82F6); }
+    #fire-section { background: linear-gradient(135deg, #C2410C, #F97316); }
+    #nhs-section { background: linear-gradient(135deg, #1D4ED8, #3B82F6); }
+    #weather-section { background: linear-gradient(135deg, #B45309, #FACC15); }
+
     .alert-card {
-      display: flex;
-      flex-direction: column;
+      background-color: rgba(0,0,0,0.5);
       padding: 0.75rem;
       margin-bottom: 0.5rem;
       border-radius: 0.5rem;
-      color: white;
-      transition: background-color 0.2s;
+      transition: transform 0.2s, box-shadow 0.2s;
       cursor: pointer;
-      opacity: 0.85;
     }
 
     .alert-card:hover {
-      background-color: rgba(255,255,255,0.05);
+      transform: translateY(-2px);
+      box-shadow: 0 0 10px rgba(255,255,255,0.3);
     }
 
     .dot {
-      width: 10px;
-      height: 10px;
+      width: 12px;
+      height: 12px;
       border-radius: 50%;
       display: inline-block;
-      margin-right: 8px;
+      margin-right: 10px;
+      box-shadow: 0 0 4px currentColor;
     }
 
     .filter-btn {
-      padding: 0.5rem 1rem;
-      border-radius: 0.375rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: opacity 0.2s;
+      padding: 0.5rem 1.2rem;
+      border-radius: 9999px;
+      font-weight: 600;
+      color: white;
       margin: 0.25rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
     }
 
     .filter-btn:hover {
-      opacity: 0.9;
+      transform: translateY(-2px);
+      box-shadow: 0 0 10px rgba(255,255,255,0.5);
     }
+
+    /* Button Colors */
+    .filter-btn[data-target="police"] { background-color: #1E3A8A; }
+    .filter-btn[data-target="fire"] { background-color: #C2410C; }
+    .filter-btn[data-target="nhs"] { background-color: #1D4ED8; }
+    .filter-btn[data-target="weather"] { background-color: #B45309; }
+    .filter-btn[data-target="all"] { background-color: #4B5563; }
+
+    .alert-description {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      color: #e0e0e0;
+      margin-top: 0.25rem;
+    }
+
+    .alert-description.open {
+      max-height: 500px;
+    }
+
   </style>
 </head>
 <body>
@@ -83,11 +110,11 @@
 <main class="p-6 relative z-10">
   <!-- Filter Buttons -->
   <div class="flex justify-center mb-6 flex-wrap">
-    <button class="filter-btn bg-blue-900 bg-opacity-70 text-white" data-target="police">Police</button>
-    <button class="filter-btn bg-orange-900 bg-opacity-70 text-white" data-target="fire">Fire</button>
-    <button class="filter-btn bg-blue-800 bg-opacity-70 text-white" data-target="nhs">NHS</button>
-    <button class="filter-btn bg-yellow-900 bg-opacity-70 text-white" data-target="weather">Weather</button>
-    <button class="filter-btn bg-gray-700 bg-opacity-70 text-white" data-target="all">All</button>
+    <button class="filter-btn" data-target="police">Police</button>
+    <button class="filter-btn" data-target="fire">Fire</button>
+    <button class="filter-btn" data-target="nhs">NHS</button>
+    <button class="filter-btn" data-target="weather">Weather</button>
+    <button class="filter-btn" data-target="all">All</button>
   </div>
 
   <div class="grid gap-6 md:grid-cols-2">
