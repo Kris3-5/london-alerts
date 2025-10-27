@@ -48,11 +48,14 @@ jobs:
           git add data/*.json
           git commit -m "Update alerts [skip ci]" --allow-empty
 
-      # Push changes using your PAT
-      - name: Push changes
+      - name: Push changes using PAT
         env:
           PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
-          # Set remote URL using PAT
-          git remote set-url origin https://$PAT_TOKEN@github.com/${{ github.repository }}.git
-          git push origin HEAD:main
+         git config --global user.name "GitHub Actions"
+         git config --global user.email "actions@github.com"
+         git add data/*.json
+         git commit -m "Update alerts [skip ci]" --allow-empty
+         # Use PAT in remote URL
+         git remote set-url origin https://$PAT_TOKEN@github.com/${{ github.repository }}.git
+         git push origin HEAD:main
