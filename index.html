@@ -2,20 +2,62 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>London Alerts Monitor</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <style>
+    /* --- Basic page styles --- */
     body, html {
       margin: 0;
       padding: 0;
       height: 100%;
-      background-color: #0d0d0d;
-      color: white;
       font-family: sans-serif;
+      color: white;
       overflow-x: hidden;
+      background-color: #000;
     }
 
+    header {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 20px;
+      font-size: 2rem;
+      font-weight: bold;
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+    }
+
+    .category-section {
+      padding: 10px;
+      border-radius: 10px;
+    }
+
+    .alert-card {
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      transition: transform 0.2s;
+    }
+
+    .alert-card:hover { transform: scale(1.02); }
+
+    /* --- Category colors --- */
+    #police-list .alert-card { background-color: #001f3f; color: white; }
+    #fire-list .alert-card { background-color: #8B4000; color: white; }
+    #nhs-list .alert-card { background-color: #004080; color: white; }
+    #weather-list .alert-card { background-color: #B8860B; color: white; }
+
+    /* --- Canvas background --- */
     canvas#bg-canvas {
       position: fixed;
       top: 0;
@@ -23,126 +65,110 @@
       width: 100vw;
       height: 100vh;
       z-index: 0;
-      background-color: #000;
       display: block;
+      background-color: #000;
     }
-
-    .alert-section {
-      padding: 1rem;
-      border-radius: 0.75rem;
-      margin-bottom: 1rem;
-      color: white;
-    }
-
-    /* Category Gradients */
-    #police-section { background: linear-gradient(135deg, #1E3A8A, #3B82F6); }
-    #fire-section { background: linear-gradient(135deg, #C2410C, #F97316); }
-    #nhs-section { background: linear-gradient(135deg, #1D4ED8, #3B82F6); }
-    #weather-section { background: linear-gradient(135deg, #B45309, #FACC15); }
-
-    .alert-card {
-      background-color: rgba(0,0,0,0.5);
-      padding: 0.75rem;
-      margin-bottom: 0.5rem;
-      border-radius: 0.5rem;
-      transition: transform 0.2s, box-shadow 0.2s;
-      cursor: pointer;
-    }
-
-    .alert-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 0 10px rgba(255,255,255,0.3);
-    }
-
-    .dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      display: inline-block;
-      margin-right: 10px;
-      box-shadow: 0 0 4px currentColor;
-    }
-
-    .filter-btn {
-      padding: 0.5rem 1.2rem;
-      border-radius: 9999px;
-      font-weight: 600;
-      color: white;
-      margin: 0.25rem;
-      transition: transform 0.2s, box-shadow 0.2s;
-      cursor: pointer;
-    }
-
-    .filter-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 0 10px rgba(255,255,255,0.5);
-    }
-
-    /* Button Colors */
-    .filter-btn[data-target="police"] { background-color: #1E3A8A; }
-    .filter-btn[data-target="fire"] { background-color: #C2410C; }
-    .filter-btn[data-target="nhs"] { background-color: #1D4ED8; }
-    .filter-btn[data-target="weather"] { background-color: #B45309; }
-    .filter-btn[data-target="all"] { background-color: #4B5563; }
-
-    .alert-description {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.3s ease;
-      color: #e0e0e0;
-      margin-top: 0.25rem;
-    }
-
-    .alert-description.open {
-      max-height: 500px;
-    }
-
   </style>
 </head>
 <body>
 
-<canvas id="bg-canvas"></canvas>
+  <!-- Animated geometric background -->
+  <canvas id="bg-canvas"></canvas>
 
-<header class="p-6 text-center relative z-10">
-  <h1 class="text-4xl font-bold mb-2">London Alerts Monitor</h1>
-  <p class="text-gray-300">Police | Fire | NHS | Weather</p>
-  <p id="last-updated" class="text-gray-400 mt-1"></p>
-</header>
+  <header>London Alerts Monitor</header>
 
-<main class="p-6 relative z-10">
-  <!-- Filter Buttons -->
-  <div class="flex justify-center mb-6 flex-wrap">
-    <button class="filter-btn" data-target="police">Police</button>
-    <button class="filter-btn" data-target="fire">Fire</button>
-    <button class="filter-btn" data-target="nhs">NHS</button>
-    <button class="filter-btn" data-target="weather">Weather</button>
-    <button class="filter-btn" data-target="all">All</button>
-  </div>
+  <main>
+    <div class="category-section">
+      <h2>Police</h2>
+      <div id="police-list"></div>
+    </div>
+    <div class="category-section">
+      <h2>Fire</h2>
+      <div id="fire-list"></div>
+    </div>
+    <div class="category-section">
+      <h2>NHS</h2>
+      <div id="nhs-list"></div>
+    </div>
+    <div class="category-section">
+      <h2>Weather</h2>
+      <div id="weather-list"></div>
+    </div>
+  </main>
 
-  <div class="grid gap-6 md:grid-cols-2">
-    <section class="alert-section" id="police-section">
-      <h2 class="text-xl font-semibold mb-2">Police Alerts</h2>
-      <ul id="police-list"></ul>
-    </section>
+  <!-- --- Scripts --- -->
+  <script src="background.js"></script>
+  <script>
+    // --- Fetch & render alerts ---
+    async function fetchData(url, containerId, collapsible = false) {
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`Failed to fetch ${url}`);
+        const data = await res.json();
+        const container = document.getElementById(containerId);
+        container.innerHTML = '';
 
-    <section class="alert-section" id="fire-section">
-      <h2 class="text-xl font-semibold mb-2">Fire Alerts</h2>
-      <ul id="fire-list"></ul>
-    </section>
+        data.alerts.forEach(alert => {
+          let dotColor = 'green';
+          if (alert.title.toLowerCase().includes('warning')) dotColor = 'yellow';
+          if (alert.title.toLowerCase().includes('alert') || alert.title.toLowerCase().includes('emergency')) dotColor = 'red';
 
-    <section class="alert-section" id="nhs-section">
-      <h2 class="text-xl font-semibold mb-2">NHS & Health</h2>
-      <ul id="nhs-list"></ul>
-    </section>
+          const card = document.createElement('div');
+          card.className = 'alert-card';
 
-    <section class="alert-section" id="weather-section">
-      <h2 class="text-xl font-semibold mb-2">Weather Alerts</h2>
-      <ul id="weather-list"></ul>
-    </section>
-  </div>
-</main>
+          const dot = document.createElement('span');
+          dot.style.width = '12px';
+          dot.style.height = '12px';
+          dot.style.borderRadius = '50%';
+          dot.style.display = 'inline-block';
+          dot.style.marginRight = '8px';
+          dot.style.backgroundColor = dotColor;
 
-<script src="background.js"></script>
-<script src="script.js"></script>
+          const title = document.createElement('strong');
+          title.innerText = alert.title;
+
+          const header = document.createElement('div');
+          header.style.display = 'flex';
+          header.style.alignItems = 'center';
+          header.appendChild(dot);
+          header.appendChild(title);
+          card.appendChild(header);
+
+          if (collapsible && alert.description) {
+            const desc = document.createElement('div');
+            desc.innerHTML = alert.description;
+            desc.style.display = 'none';
+            desc.style.marginTop = '6px';
+            desc.style.fontSize = '0.9rem';
+            card.appendChild(desc);
+
+            card.addEventListener('click', () => {
+              desc.style.display = desc.style.display === 'none' ? 'block' : 'none';
+            });
+          }
+
+          container.appendChild(card);
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    const categories = [
+      {id: 'police-list', url: './data/police.json', collapsible: true},
+      {id: 'fire-list', url: './data/fire.json', collapsible: true},
+      {id: 'nhs-list', url: './data/nhs.json', collapsible: true},
+      {id: 'weather-list', url: './data/weather.json', collapsible: true}
+    ];
+
+    // Initial fetch
+    categories.forEach(cat => fetchData(cat.url, cat.id, cat.collapsible));
+
+    // Auto-update every 30 minutes
+    setInterval(() => {
+      categories.forEach(cat => fetchData(cat.url, cat.id, cat.collapsible));
+    }, 1800000);
+  </script>
+
 </body>
 </html>
