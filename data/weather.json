@@ -1,6 +1,6 @@
 [
   {
-    "title": "No recent alerts",
-    "description": "None currently."
+    "title": "Error",
+    "description": "[Errno 104] Connection reset by peer"
   }
 ]
